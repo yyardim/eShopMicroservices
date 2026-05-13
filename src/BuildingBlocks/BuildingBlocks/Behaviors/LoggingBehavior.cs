@@ -4,46 +4,45 @@ using System.Diagnostics;
 
 namespace BuildingBlocks.Behaviors;
 
-public class LoggingBehavior<TRequest, TResponse>
+public partial class LoggingBehavior<TRequest, TResponse>
     (ILogger<LoggingBehavior<TRequest, TResponse>> logger)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull, IRequest<TResponse>
     where TResponse : notnull
 {
     public async Task<TResponse> Handle(
-        TRequest request, 
-        RequestHandlerDelegate<TResponse> next, 
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        logger.LogInformation("[START] Handling {Request} " +
-            "- Response={Response} " +
-            "- RequestData={RequestData}", 
-            typeof(TRequest).Name,
-            typeof(TResponse).Name,
-            request);
+        var requestName = typeof(TRequest).Name;
+        var responseName = typeof(TResponse).Name;
 
-        var timer = new Stopwatch();
-        timer.Start();
+        LogStart(logger, requestName, responseName, request);
+
+        var startTimestamp = Stopwatch.GetTimestamp();
 
         var response = await next();
 
-        timer.Stop();
-        var timeTaken = timer.Elapsed;
-        if (timeTaken.Seconds > 3)
-            logger.LogWarning("[SLOW] Handling {Request} " +
-                "- Response={Response} " +
-                "- TimeTaken={TimeTaken}", 
-                typeof(TRequest).Name,
-                typeof(TResponse).Name,
-                timeTaken);
+        var elapsed = Stopwatch.GetElapsedTime(startTimestamp);
 
-        logger.LogInformation("[END] Handling {Request} " +
-            "- Response={Response} " +
-            "- TimeTaken={TimeTaken}", 
-            typeof(TRequest).Name,
-            typeof(TResponse).Name,
-            timeTaken);
+        if (elapsed.TotalSeconds > 3)
+            LogSlow(logger, requestName, responseName, elapsed);
+
+        LogEnd(logger, requestName, responseName, elapsed);
 
         return response;
     }
+
+    [LoggerMessage(Level = LogLevel.Information,
+        Message = "[START] Handling {Request} - Response={Response} - RequestData={RequestData}")]
+    static partial void LogStart(ILogger logger, string request, string response, object? requestData);
+
+    [LoggerMessage(Level = LogLevel.Warning,
+        Message = "[SLOW] Handling {Request} - Response={Response} - TimeTaken={TimeTaken}")]
+    static partial void LogSlow(ILogger logger, string request, string response, TimeSpan timeTaken);
+
+    [LoggerMessage(Level = LogLevel.Information,
+        Message = "[END] Handling {Request} - Response={Response} - TimeTaken={TimeTaken}")]
+    static partial void LogEnd(ILogger logger, string request, string response, TimeSpan timeTaken);
 }
