@@ -1,0 +1,20 @@
+# yaml-language-server: $schema=../../postman-schema.json
+$kind: http-request
+name: Create Product
+method: POST
+url: '{{baseUrl}}/products'
+order: 4000
+description: Creates a new product in the catalog. Returns 201 Created with the new product ID.
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Sample Product",
+      "category": ["Electronics", "Gadgets"],
+      "description": "A sample product description",
+      "imageFile": "product-image.jpg",
+      "price": 99.99
+    }

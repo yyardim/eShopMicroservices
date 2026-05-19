@@ -1,5 +1,6 @@
 ﻿using BuildingBlocks.CQRS;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 
 namespace BuildingBlocks.Behaviors;
@@ -10,22 +11,21 @@ public class ValidatorBehavior<TRequest, TResponse>
     where TRequest : ICommand<TResponse>
 {
     public async Task<TResponse> Handle(
-        TRequest request, 
-        RequestHandlerDelegate<TResponse> next, 
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var context = new ValidationContext<TRequest>(request);
+        ValidationContext<TRequest> context = new(request);
 
-        var valiationResults = await Task.WhenAll(
+        ValidationResult[] valiationResults = await Task.WhenAll(
             validators.Select(v => v.ValidateAsync(context, cancellationToken)));
 
-        var failures = valiationResults
+        List<ValidationFailure> failures = [.. valiationResults
             .Where(r => r.Errors.Count != 0)
-            .SelectMany(r => r.Errors)
-            .ToList();
+            .SelectMany(r => r.Errors)];
 
         if (failures.Count != 0) throw new ValidationException(failures);
 
-        return await next();
+        return await next(cancellationToken);
     }
 }

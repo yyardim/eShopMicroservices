@@ -15,13 +15,15 @@ builder.Services.AddValidatorsFromAssembly(assembly);
 
 builder.Services.AddMarten(opts =>
 {
-    opts.Connection(builder.Configuration.GetConnectionString("Database"));
+    opts.Connection(connectionString: builder.Configuration.GetConnectionString("Database")
+        ?? throw new InvalidOperationException("Database connection string is not configured."));
 }).UseLightweightSessions();
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 builder.Services.AddHealthChecks()
-    .AddNpgSql(builder.Configuration.GetConnectionString("Database"));
+    .AddNpgSql(connectionString: builder.Configuration.GetConnectionString("Database")
+        ?? throw new InvalidOperationException("Database connection string is not configured."));
 
 WebApplication app = builder.Build();
 

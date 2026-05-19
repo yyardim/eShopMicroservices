@@ -4,12 +4,6 @@ services:
   catalogdb:
     image: postgres:17-alpine
 
-  basketdb:
-    image: postgres:17-alpine
-
-  distributedcache:
-    image: redis
-
   catalog.api:
     image: ${DOCKER_REGISTRY-}catalogapi
     build:
@@ -18,4 +12,3 @@ services:
 
 volumes:
   postgres_catalog:
-  postgres_basket:

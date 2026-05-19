@@ -1,6 +1,6 @@
 ﻿namespace Catalog.API.Products.CreateProduct;
 
-public record CreateProductCommand(string Name, 
+public record CreateProductCommand(string Name,
     List<string> Category, 
     string Description, 
     string ImageFile, 
@@ -25,7 +25,7 @@ internal class CreateProductCommandHandler
 {
     public async Task<CreateProductResult> Handle(
         CreateProductCommand command, 
-        CancellationToken cancellationToken)
+        CancellationToken ct)
     {
         Product product = new()
         {
@@ -38,7 +38,7 @@ internal class CreateProductCommandHandler
 
         // Save product to database
         session.Store(product);
-        await session.SaveChangesAsync(cancellationToken);
+        await session.SaveChangesAsync(ct);
 
         return new CreateProductResult(product.Id);
     }

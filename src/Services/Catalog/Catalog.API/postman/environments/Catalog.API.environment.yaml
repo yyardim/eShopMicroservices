@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=../postman-schema.json
+name: Catalog API - Local
+values:
+  - key: baseUrl
+    value: 'http://localhost:5000'
+    enabled: true
+    type: default
+  - key: productId
+    value: ''
+    enabled: true
+    type: default
+  - key: category
+    value: Electronics
+    enabled: true
+    type: default

@@ -1,0 +1,3 @@
+# yaml-language-server: $schema=../postman-schema.json
+name: Globals
+values: []

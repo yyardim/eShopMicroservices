@@ -2,17 +2,18 @@
 namespace Catalog.API.Products.GetProducts;
 
 public record GetProductsQuery() :IQuery<GetProductsResult>;
-public record GetProductsResult(IEnumerable<Product> Products);
+public record GetProductsResult(IReadOnlyList<Product> Products);
 
 internal class GetProductsQueryHandler
     (IDocumentSession session)
     : IQueryHandler<GetProductsQuery, GetProductsResult>
 {
-    public async Task<GetProductsResult> Handle(GetProductsQuery query, CancellationToken cancellationToken)
+    public async Task<GetProductsResult> Handle(
+        GetProductsQuery query, CancellationToken ct)
     {
-        IEnumerable<Product> products = await session
+        IReadOnlyList<Product> products = await session
             .Query<Product>()
-            .ToListAsync(cancellationToken);
+            .ToListAsync(ct);
 
         return new GetProductsResult(products);
     }

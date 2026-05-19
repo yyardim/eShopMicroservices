@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet build *)",
+      "Bash(mkdir -p \"C:\\\\GitRepo\\\\eShopMicroservices\\\\.vscode\")",
+      "Bash(Remove-Item -Recurse -Force \"C:\\\\GitRepo\\\\eShopMicroservices\\\\.vscode\")"
+    ]
+  }
+}

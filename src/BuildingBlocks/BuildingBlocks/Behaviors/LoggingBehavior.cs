@@ -15,16 +15,16 @@ public partial class LoggingBehavior<TRequest, TResponse>
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        var requestName = typeof(TRequest).Name;
-        var responseName = typeof(TResponse).Name;
+        string requestName = typeof(TRequest).Name;
+        string responseName = typeof(TResponse).Name;
 
         LogStart(logger, requestName, responseName, request);
 
-        var startTimestamp = Stopwatch.GetTimestamp();
+        long startTimestamp = Stopwatch.GetTimestamp();
 
-        var response = await next();
+        TResponse response = await next(cancellationToken);
 
-        var elapsed = Stopwatch.GetElapsedTime(startTimestamp);
+        TimeSpan elapsed = Stopwatch.GetElapsedTime(startTimestamp);
 
         if (elapsed.TotalSeconds > 3)
             LogSlow(logger, requestName, responseName, elapsed);

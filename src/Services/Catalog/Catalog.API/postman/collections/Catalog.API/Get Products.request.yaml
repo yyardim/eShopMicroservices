@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=../../postman-schema.json
+$kind: http-request
+name: Get Products
+method: GET
+url: '{{baseUrl}}/products'
+order: 1000
+description: Retrieves all products from the catalog.

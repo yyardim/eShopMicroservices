@@ -6,72 +6,52 @@ using Microsoft.Extensions.Logging;
 
 namespace BuildingBlocks.Exceptions.Handler;
 
-public class CustomExceptionHandler
+public partial class CustomExceptionHandler
     (ILogger<CustomExceptionHandler> logger)
     : IExceptionHandler
 {
     public async ValueTask<bool> TryHandleAsync(
-        HttpContext context, 
-        Exception exception, 
+        HttpContext context,
+        Exception exception,
         CancellationToken cancellationToken)
     {
-        logger.LogError(
-            "Error Message: {exception} \n" +
-            "Time of occurrence: {time}",
-            exception.Message, 
-            DateTime.UtcNow);
-
-        (string? Detail, string Title, int StatusCode) = exception switch
+        (int statusCode, string title, string? detail) = exception switch
         {
-            BadRequestException =>
-            (
-                exception.Message,
-                exception.GetType().Name,
-                context.Response.StatusCode = StatusCodes.Status400BadRequest
-           ),
-           ValidationException =>
-           (
-               exception.Message,
-               exception.GetType().Name,
-               context.Response.StatusCode = StatusCodes.Status400BadRequest
-           ),
-           InternalServerException =>
-           (
-               exception.Message,
-               exception.GetType().Name,
-               context.Response.StatusCode = StatusCodes.Status500InternalServerError
-           ),
-           NotFoundException =>
-           (
-               exception.Message,
-               exception.GetType().Name,
-               context.Response.StatusCode = StatusCodes.Status404NotFound
-           ),
-           _ =>
-              (
-                exception.Message,
-                exception.GetType().Name,
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError
-              )
+            ValidationException e => (StatusCodes.Status400BadRequest, nameof(ValidationException), e.Message),
+            BadRequestException e => (StatusCodes.Status400BadRequest, nameof(BadRequestException), e.Details ?? e.Message),
+            NotFoundException e => (StatusCodes.Status404NotFound, nameof(NotFoundException), e.Message),
+            InternalServerException e => (StatusCodes.Status500InternalServerError, nameof(InternalServerException), e.Details ?? e.Message),
+            _ => (StatusCodes.Status500InternalServerError, "InternalServerError", exception.Message),
         };
 
-        var problemDetails = new ProblemDetails
+        if (statusCode >= 500)
+            LogError(logger, statusCode, exception);
+        else
+            LogWarning(logger, statusCode, exception);
+
+        context.Response.StatusCode = statusCode;
+
+        ProblemDetails problemDetails = new()
         {
-            Title = Title,
-            Detail = Detail,
-            Status = StatusCode,
+            Title    = title,
+            Detail   = detail,
+            Status   = statusCode,
             Instance = context.Request.Path
         };
 
         problemDetails.Extensions.Add("traceId", context.TraceIdentifier);
 
         if (exception is ValidationException validationException)
-        {
             problemDetails.Extensions.Add("errors", validationException.Errors);
-        }
 
-        await context.Response.WriteAsJsonAsync(problemDetails);
+        await context.Response.WriteAsJsonAsync(problemDetails, cancellationToken: cancellationToken);
 
         return true;
     }
+
+    [LoggerMessage(Level = LogLevel.Warning, Message = "Client error HTTP {StatusCode}")]
+    static partial void LogWarning(ILogger logger, int statusCode, Exception exception);
+
+    [LoggerMessage(Level = LogLevel.Error, Message = "Unhandled server error HTTP {StatusCode}")]
+    static partial void LogError(ILogger logger, int statusCode, Exception exception);
 }
