@@ -1,0 +1,5 @@
+$kind: http-request
+name: DELETE Product
+url: "{{catalog_url}}/products/{{productId}}"
+method: DELETE
+order: 4497056353665357

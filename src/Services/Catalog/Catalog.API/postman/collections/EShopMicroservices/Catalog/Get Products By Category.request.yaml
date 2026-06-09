@@ -3,5 +3,5 @@ $kind: http-request
 name: Get Products By Category
 method: GET
 url: '{{baseUrl}}/products/category/{{category}}'
-order: 3000
+order: 3221863835316864
 description: Retrieves all products belonging to a specific category.

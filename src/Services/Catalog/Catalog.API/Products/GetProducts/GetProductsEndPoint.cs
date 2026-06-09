@@ -9,7 +9,8 @@ public class GetProductsEndPoint : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        _ = app.MapGet(pattern: Route,
+        _ = app.MapGet(
+            pattern: Route,
             handler: static async (ISender sender) =>
             {
                 GetProductsResult result = await sender.Send(new GetProductsQuery());
