@@ -1,6 +1,0 @@
-# yaml-language-server: $schema=../../../postman-schema.json
-$kind: collection
-name: Catalog API
-description: Collection for the eShopMicroservices Catalog.API service. Covers product management endpoints.
-variables:
-  baseUrl: http://localhost:5000

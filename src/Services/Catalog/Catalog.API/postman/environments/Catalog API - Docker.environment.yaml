@@ -1,4 +1,4 @@
-name: Catalog API - Local
+name: Catalog API - Docker
 values:
   - key: catalog_url
     value: 'http://localhost:5000'

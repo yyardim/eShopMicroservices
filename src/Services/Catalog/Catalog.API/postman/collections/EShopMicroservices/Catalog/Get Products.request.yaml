@@ -2,6 +2,6 @@
 $kind: http-request
 name: Get Products
 method: GET
-url: '{{baseUrl}}/products'
-order: 1000
+url: "{{catalog_url}}/products"
+order: 1780443717185
 description: Retrieves all products from the catalog.

@@ -2,6 +2,6 @@
 $kind: http-request
 name: Get Product By Id
 method: GET
-url: '{{baseUrl}}/products/{{productId}}'
-order: 2000
+url: "{{catalog_url}}/products/{{productId}}"
+order: 1715792740344244
 description: Retrieves a single product by its GUID ID.

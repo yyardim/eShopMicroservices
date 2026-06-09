@@ -1,13 +1,11 @@
 # yaml-language-server: $schema=../../postman-schema.json
 $kind: http-request
-name: Create Product
 method: POST
-url: '{{baseUrl}}/products'
-order: 4000
+url: "{{catalog_url}}/products"
+order: 4202479268728235
 description: Creates a new product in the catalog. Returns 201 Created with the new product ID.
 headers:
-  - key: Content-Type
-    value: application/json
+  Content-Type: application/json
 body:
   type: json
   content: |-

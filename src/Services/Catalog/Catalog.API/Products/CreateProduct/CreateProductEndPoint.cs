@@ -15,26 +15,19 @@ public class CreateProductEndPoint : ICarterModule
 
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        try
-        {
-            _ = app.MapPost(pattern: Route,
-                handler: static async (CreateProductRequest request, ISender sender) =>
-                {
-                    CreateProductCommand command = request.Adapt<CreateProductCommand>();
-                    CreateProductResult result = await sender.Send(command);
-                    CreateProductResponse response = result.Adapt<CreateProductResponse>();
+        _ = app.MapPost(pattern: Route,
+            handler: static async (CreateProductRequest request, ISender sender) =>
+            {
+                CreateProductCommand command = request.Adapt<CreateProductCommand>();
+                CreateProductResult result = await sender.Send(command);
+                CreateProductResponse response = result.Adapt<CreateProductResponse>();
                     
-                    return Results.Created($"/products/{response.Id}", response);
-                })
-                .WithName("CreateProduct")
-                .Produces<CreateProductResponse>(StatusCodes.Status201Created)
-                .ProducesProblem(StatusCodes.Status400BadRequest)
-                .WithSummary("Create Product")
-                .WithDescription("Create Product");
-        }
-        catch (Exception ex)
-        {
-            throw new Exception("Error creating product", ex);
-        }
+                return Results.Created($"/products/{response.Id}", response);
+            })
+            .WithName("CreateProduct")
+            .Produces<CreateProductResponse>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status400BadRequest)
+            .WithSummary("Create Product")
+            .WithDescription("Create Product");
     }
 }

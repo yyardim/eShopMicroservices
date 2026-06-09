@@ -1,7 +1,7 @@
 ﻿
 namespace Catalog.API.Products.GetProducts;
 
-public record GetProductsQuery() :IQuery<GetProductsResult>;
+public record GetProductsQuery() : IQuery<GetProductsResult>;
 public record GetProductsResult(IReadOnlyList<Product> Products);
 
 internal class GetProductsQueryHandler
