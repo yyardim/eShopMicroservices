@@ -4,16 +4,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace BuildingBlocks.Exceptions.Handler;
+namespace SharedKernel.Exceptions.Handler;
 
 public partial class CustomExceptionHandler
     (ILogger<CustomExceptionHandler> logger)
     : IExceptionHandler
 {
-    public async ValueTask<bool> TryHandleAsync(
-        HttpContext context,
-        Exception exception,
-        CancellationToken cancellationToken)
+    public async ValueTask<bool> TryHandleAsync
+        (HttpContext context, Exception exception, CancellationToken ct)
     {
         (int statusCode, string title, string? detail) = exception switch
         {
@@ -24,10 +22,15 @@ public partial class CustomExceptionHandler
             _ => (StatusCodes.Status500InternalServerError, "InternalServerError", exception.Message),
         };
 
-        if (statusCode >= 500)
-            LogError(logger, statusCode, exception);
-        else
-            LogWarning(logger, statusCode, exception);
+        switch (statusCode)
+        {
+            case >= 500:
+                LogError(logger, statusCode, exception);
+                break;
+            default:
+                LogWarning(logger, statusCode, exception);
+                break;
+        }
 
         context.Response.StatusCode = statusCode;
 
@@ -44,7 +47,7 @@ public partial class CustomExceptionHandler
         if (exception is ValidationException validationException)
             problemDetails.Extensions.Add("errors", validationException.Errors);
 
-        await context.Response.WriteAsJsonAsync(problemDetails, cancellationToken: cancellationToken);
+        await context.Response.WriteAsJsonAsync(problemDetails, cancellationToken: ct);
 
         return true;
     }
