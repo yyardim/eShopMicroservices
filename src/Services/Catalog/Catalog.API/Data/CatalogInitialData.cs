@@ -163,7 +163,7 @@ public class CatalogInitialData : IInitialData
         },
         new Product
         {
-            Id = new Guid("0f1e2d3c-4b5a-6789-0123-456789abcdef"),
+            Id = new Guid("6f3b7b2d-3f57-4e0d-bc9e-58ff4ab1f9c2"),
             Name = "Microsoft Surface Pro 7",
             Category = ["Tablets"],
             Description = "The ultimate tablet experience with the powerful Intel processor.",
