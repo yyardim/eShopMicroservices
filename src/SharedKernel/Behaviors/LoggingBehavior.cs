@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
-namespace BuildingBlocks.Behaviors;
+namespace SharedKernel.Behaviors;
 
 public partial class LoggingBehavior<TRequest, TResponse>
     (ILogger<LoggingBehavior<TRequest, TResponse>> logger)
@@ -10,10 +10,8 @@ public partial class LoggingBehavior<TRequest, TResponse>
     where TRequest : notnull, IRequest<TResponse>
     where TResponse : notnull
 {
-    public async Task<TResponse> Handle(
-        TRequest request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken)
+    public async Task<TResponse> Handle
+        (TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken ct)
     {
         string requestName = typeof(TRequest).Name;
         string responseName = typeof(TResponse).Name;
@@ -22,7 +20,7 @@ public partial class LoggingBehavior<TRequest, TResponse>
 
         long startTimestamp = Stopwatch.GetTimestamp();
 
-        TResponse response = await next(cancellationToken);
+        TResponse response = await next(ct);
 
         TimeSpan elapsed = Stopwatch.GetElapsedTime(startTimestamp);
 

@@ -1,8 +1,8 @@
-﻿using BuildingBlocks.Exceptions;
+﻿using SharedKernel.Exceptions;
 
 namespace Catalog.API.Exceptions;
 
-public class ProductNotFoundException(Guid Id) 
+public class ProductNotFoundException(Guid Id)
     : NotFoundException("Product", Id)
 {
 }

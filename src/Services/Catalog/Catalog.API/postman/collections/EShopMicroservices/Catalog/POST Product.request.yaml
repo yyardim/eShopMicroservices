@@ -1,5 +1,6 @@
 # yaml-language-server: $schema=../../postman-schema.json
 $kind: http-request
+name: POST Product
 method: POST
 url: "{{catalog_url}}/products"
 order: 4202479268728235

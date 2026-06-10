@@ -1,0 +1,174 @@
+﻿using Marten.Schema;
+
+namespace Catalog.API.Data;
+
+public class CatalogInitialData : IInitialData
+{
+    public async Task Populate(IDocumentStore store, CancellationToken ct)
+    {
+        using var session = store.LightweightSession();
+
+        if (await session.Query<Product>().AnyAsync(token: ct))
+            return;
+
+        session.Store(GetPreconfiguredProducts());
+        await session.SaveChangesAsync(ct);
+    }
+
+    private static IEnumerable<Product> GetPreconfiguredProducts() =>
+    [
+        new Product
+        {
+            Id = new Guid("5334c996-8457-4c8b-9e1a-1f0e5b6c8d1a"),
+            Name = "IPhone X",
+            Category = ["Smart Phone"],
+            Description = "This phone is the company's biggest change in design.",
+            ImageFile = "product-1.png",
+            Price = 950.0m
+        },
+        new Product
+        {
+            Id = new Guid("a1b2c3d4-e5f6-7890-1234-56789abcdef0"),
+            Name = "Samsung 10",
+            Category = ["Smart Phone"],
+            Description = "This phone is the company's biggest change in design.",
+            ImageFile = "product-2.png",
+            Price = 840.0m
+        },
+        new Product
+        {
+            Id = new Guid("0f1e2d3c-4b5a-6789-0123-456789abcdef"),
+            Name = "Huawei Plus",
+            Category = ["Smart Phone"],
+            Description = "This phone is the company's biggest change in design.",
+            ImageFile = "product-3.png",
+            Price = 650.0m
+        },
+        new Product
+        {
+            Id = new Guid("12345678-90ab-cdef-1234-567890abcdef"),
+            Name = "Xiaomi Mi 9",
+            Category = ["Smart Phone"],
+            Description = "This phone is the company's biggest change in design.",
+            ImageFile = "product-4.png",
+            Price = 470.0m
+        },
+        new Product
+        {
+            Id = new Guid("abcdef12-3456-7890-abcd-ef1234567890"),
+            Name = "HTC U11+ Plus",
+            Category = ["Smart Phone"],
+            Description = "This phone is the company's biggest change in design.",
+            ImageFile = "product-5.png",
+            Price = 380.0m
+        },
+        new Product
+        {
+            Id = new Guid("fedcba98-7654-3210-fedc-ba9876543210"),
+            Name = "LG G7 ThinQ",
+            Category = ["Smart Phone"],
+            Description = "This phone is the company's biggest change in design.",
+            ImageFile = "product-6.png",
+            Price = 240.0m
+        },
+        new Product
+        {
+            Id = new Guid("0a1b2c3d-4e5f-6789-0123-456789abcdef"),
+            Name = "Sony Xperia XZ",
+            Category = ["Smart Phone"],
+            Description = "This phone is the company's biggest change in design.",
+            ImageFile = "product-7.png",
+            Price = 500.0m
+        },
+        new Product
+        {
+            Id = new Guid("b7a3d1aa-9bfb-4fd0-a6c2-7c3f353a1c1e"),
+            Name = "Nokia 7.1",
+            Category = ["Smart Phone"],
+            Description = "This phone is the company's biggest change in design.",
+            ImageFile = "product-8.png",
+            Price = 350.0m
+        },
+        new Product
+        {
+            Id = new Guid("7f676e58-0c18-4d64-9bf2-5c2e7f6a9c49"),
+            Name = "Apple Airpods",
+            Category = ["Accessories"],
+            Description = "Bluetooth technology lets you connect it with compatible devices wirelessly.",
+            ImageFile = "product-9.png",
+            Price = 160.0m
+        },
+        new Product
+        {
+            Id = new Guid("b0d6f5c9-7d1e-4d1b-a4a2-3109a6f5c8d2"),
+            Name = "Bose SoundSport",
+            Category = ["Accessories"],
+            Description = "Wireless headphones with excellent sound quality.",
+            ImageFile = "product-10.png",
+            Price = 120.0m
+        },
+        new Product
+        {
+            Id = new Guid("4c5d1e8a-6a19-4ed1-8f44-7b3d2c2a3f5b"),
+            Name = "Sony WH-1000XM4",
+            Category = ["Accessories"],
+            Description = "Industry-leading noise canceling with Dual Noise Sensor technology.",
+            ImageFile = "product-11.png",
+            Price = 350.0m
+        },
+        new Product
+        {
+            Id = new Guid("5334c996-8457-4c8b-9e1a-1f0e5b6c8d1a"),
+            Name = "Apple Watch Series 6",
+            Category = ["Wearables"],
+            Description = "The future of health is on your wrist.",
+            ImageFile = "product-12.png",
+            Price = 400.0m
+        },
+        new Product
+        {
+            Id = new Guid("0a1b2c3d-4e5f-6789-0123-456789abcdef"),
+            Name = "Fitbit Charge 4",
+            Category = ["Wearables"],
+            Description = "Advanced fitness tracker with built-in GPS.",
+            ImageFile = "product-13.png",
+            Price = 150.0m
+        },
+        new Product
+        {
+            Id = new Guid("abcdef12-3456-7890-abcd-ef1234567890"),
+            Name = "Garmin Forerunner 945",
+            Category = ["Wearables"],
+            Description = "Premium GPS running and triathlon smartwatch.",
+            ImageFile = "product-14.png",
+            Price = 600.0m
+        },
+        new Product
+        {
+            Id = new Guid("3a39ac64-9cc7-4b0d-9d1c-2aafed3a7a24"),
+            Name = "Samsung Galaxy Watch 3",
+            Category = ["Wearables"],
+            Description = "The next generation of Samsung's smartwatch.",
+            ImageFile = "product-15.png",
+            Price = 350.0m
+        },
+        new Product
+        {
+            Id = new Guid("e7e7a9cf-9e94-4e5f-b4e7-64a81c0ce3bd"),
+            Name = "Apple iPad Pro",
+            Category = ["Tablets"],
+            Description = "The ultimate iPad experience with the powerful M1 chip.",
+            ImageFile = "product-16.png",
+            Price = 800.0m
+        },
+        new Product
+        {
+            Id = new Guid("6f3b7b2d-3f57-4e0d-bc9e-58ff4ab1f9c2"),
+            Name = "Microsoft Surface Pro 7",
+            Category = ["Tablets"],
+            Description = "The ultimate tablet experience with the powerful Intel processor.",
+            ImageFile = "product-17.png",
+            Price = 900.0m
+        }
+    ];
+}

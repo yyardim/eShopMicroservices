@@ -1,12 +1,12 @@
 ﻿global using Basket.API.Models;
-global using BuildingBlocks.CQRS;
+global using SharedKernel.CQRS;
 global using Carter;
 global using Mapster;
 global using MediatR;
 global using FluentValidation;
-global using BuildingBlocks.Behaviors;
+global using SharedKernel.Behaviors;
 global using System.Reflection;
-global using BuildingBlocks.Exceptions;
+global using SharedKernel.Exceptions;
 global using Basket.API.Exceptions;
 global using Marten;
 global using Basket.API.Data;

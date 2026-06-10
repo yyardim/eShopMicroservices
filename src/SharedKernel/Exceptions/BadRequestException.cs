@@ -1,13 +1,13 @@
-﻿namespace BuildingBlocks.Exceptions;
+﻿namespace SharedKernel.Exceptions;
 
-public class InternalServerException : Exception
+public class BadRequestException : Exception
 {
-    public InternalServerException(string message) 
+    public BadRequestException(string message)
         : base(message)
     {
     }
 
-    public InternalServerException
+    public BadRequestException
         (string message, string details) 
         : base(message)
     {

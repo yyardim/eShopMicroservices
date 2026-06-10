@@ -2,6 +2,9 @@
 $kind: http-request
 name: Get Products
 method: GET
-url: "{{catalog_url}}/products"
+url: "{{catalog_url}}/products?pageNumber=2&pageSize=5"
+queryParams:
+  pageNumber: "2"
+  pageSize: "5"
 order: 1780443717185
 description: Retrieves all products from the catalog.

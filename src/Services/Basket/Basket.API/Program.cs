@@ -1,4 +1,4 @@
-using BuildingBlocks.Exceptions.Handler;
+using SharedKernel.Exceptions.Handler;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
