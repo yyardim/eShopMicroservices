@@ -5,14 +5,15 @@ public record StoreBasketResponse(string UserName);
 
 public class StoreBasketEndpoint : ICarterModule
 {
+    private const string Route = "/basket";
+
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("/basket", async (StoreBasketRequest request, ISender sender) =>
+        _ = app.MapPost(pattern: $"{Route}", 
+            handler: static async (StoreBasketRequest request, ISender sender) =>
         {
             StoreBasketCommand command = request.Adapt<StoreBasketCommand>();
-
             StoreBasketResult result = await sender.Send(command);
-
             StoreBasketResponse response = result.Adapt<StoreBasketResponse>();
 
             return Results.Created($"/basket/{response.UserName}", response);
