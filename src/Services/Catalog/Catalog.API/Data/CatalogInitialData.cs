@@ -109,7 +109,7 @@ public class CatalogInitialData : IInitialData
         },
         new Product
         {
-            Id = new Guid("a1b2c3d4-e5f6-7890-1234-56789abcdef0"),
+            Id = new Guid("4c5d1e8a-6a19-4ed1-8f44-7b3d2c2a3f5b"),
             Name = "Sony WH-1000XM4",
             Category = ["Accessories"],
             Description = "Industry-leading noise canceling with Dual Noise Sensor technology.",
