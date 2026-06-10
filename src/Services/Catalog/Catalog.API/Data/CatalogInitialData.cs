@@ -91,7 +91,7 @@ public class CatalogInitialData : IInitialData
         },
         new Product
         {
-            Id = new Guid("12345678-90ab-cdef-1234-567890abcdef"),
+            Id = new Guid("7f676e58-0c18-4d64-9bf2-5c2e7f6a9c49"),
             Name = "Apple Airpods",
             Category = ["Accessories"],
             Description = "Bluetooth technology lets you connect it with compatible devices wirelessly.",
