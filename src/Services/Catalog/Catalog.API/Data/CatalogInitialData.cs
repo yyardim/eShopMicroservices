@@ -154,7 +154,7 @@ public class CatalogInitialData : IInitialData
         },
         new Product
         {
-            Id = new Guid("12345678-90ab-cdef-1234-567890abcdef"),
+            Id = new Guid("e7e7a9cf-9e94-4e5f-b4e7-64a81c0ce3bd"),
             Name = "Apple iPad Pro",
             Category = ["Tablets"],
             Description = "The ultimate iPad experience with the powerful M1 chip.",
