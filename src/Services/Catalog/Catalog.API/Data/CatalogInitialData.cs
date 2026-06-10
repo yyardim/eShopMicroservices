@@ -145,7 +145,7 @@ public class CatalogInitialData : IInitialData
         },
         new Product
         {
-            Id = new Guid("fedcba98-7654-3210-fedc-ba9876543210"),
+            Id = new Guid("3a39ac64-9cc7-4b0d-9d1c-2aafed3a7a24"),
             Name = "Samsung Galaxy Watch 3",
             Category = ["Wearables"],
             Description = "The next generation of Samsung's smartwatch.",
