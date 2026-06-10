@@ -12,15 +12,15 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
 {
     public CreateProductCommandValidator()
     {
-        RuleFor(x => x.Name).NotEmpty().WithMessage("Name required!");
-        RuleFor(x => x.Category).NotEmpty().WithMessage("Category required!");
-        RuleFor(x => x.ImageFile).NotEmpty().WithMessage("ImageFile required!");
-        RuleFor(x => x.Price).GreaterThan(0).WithMessage("Price not valid!");
+        _ = RuleFor(static x => x.Name).NotEmpty().WithMessage("Name required!");
+        _ = RuleFor(static x => x.Category).NotEmpty().WithMessage("Category required!");
+        _ = RuleFor(static x => x.ImageFile).NotEmpty().WithMessage("ImageFile required!");
+        _ = RuleFor(static x => x.Price).GreaterThan(0).WithMessage("Price not valid!");
     }
 }
 
 internal class CreateProductCommandHandler
-    (IDocumentSession session) 
+    (IDocumentSession session)
     : ICommandHandler<CreateProductCommand, CreateProductResult>
 {
     public async Task<CreateProductResult> Handle(

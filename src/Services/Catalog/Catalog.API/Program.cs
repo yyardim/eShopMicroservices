@@ -4,20 +4,24 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 Assembly assembly = typeof(Program).Assembly;
 
-builder.Services.AddCarter();
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly);
     config.AddOpenBehavior(typeof(ValidatorBehavior<,>));
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
+
 builder.Services.AddValidatorsFromAssembly(assembly);
+builder.Services.AddCarter();
 
 builder.Services.AddMarten(opts =>
 {
     opts.Connection(connectionString: builder.Configuration.GetConnectionString("Database")
         ?? throw new InvalidOperationException("Database connection string is not configured."));
 }).UseLightweightSessions();
+
+if (builder.Environment.IsDevelopment())
+    _ = builder.Services.InitializeMartenWith<CatalogInitialData>();
 
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 

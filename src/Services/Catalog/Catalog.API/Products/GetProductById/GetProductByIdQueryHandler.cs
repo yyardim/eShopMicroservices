@@ -12,8 +12,8 @@ internal class GetProductByIdQueryHandler
     {
         Product? product = await session.LoadAsync<Product>(query.Id, ct);
 
-        return product is null 
-            ? throw new ProductNotFoundException(query.Id) 
+        return product is null
+            ? throw new ProductNotFoundException(query.Id)
             : new GetProductByIdResult(product);
     }
 }

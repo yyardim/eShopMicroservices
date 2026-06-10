@@ -1,5 +1,6 @@
 # yaml-language-server: $schema=../../postman-schema.json
 $kind: http-request
+name: POST Product
 method: POST
 url: "{{catalog_url}}/products"
 order: 4202479268728235
@@ -10,7 +11,7 @@ body:
   type: json
   content: |-
     {
-      "name": "Sample Product",
+      "name": "",
       "category": ["Electronics", "Gadgets"],
       "description": "A sample product description",
       "imageFile": "product-image.jpg",

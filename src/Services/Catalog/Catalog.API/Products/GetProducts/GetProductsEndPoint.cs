@@ -1,6 +1,7 @@
 ﻿
 namespace Catalog.API.Products.GetProducts;
 
+public record GetProductsRequest(int? PageNumber = 1, int? PageSize = 10);
 public record GetProductsResponse(IEnumerable<Product> Products);
 
 public class GetProductsEndPoint : ICarterModule
@@ -11,9 +12,10 @@ public class GetProductsEndPoint : ICarterModule
     {
         _ = app.MapGet(
             pattern: Route,
-            handler: static async (ISender sender) =>
+            handler: static async ([AsParameters] GetProductsRequest request, ISender sender) =>
             {
-                GetProductsResult result = await sender.Send(new GetProductsQuery());
+                GetProductsQuery query = request.Adapt<GetProductsQuery>();
+                GetProductsResult result = await sender.Send(query);
                 GetProductsResponse response = result.Adapt<GetProductsResponse>();
                 
                 return Results.Ok(response);
