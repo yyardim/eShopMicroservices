@@ -100,7 +100,7 @@ public class CatalogInitialData : IInitialData
         },
         new Product
         {
-            Id = new Guid("0f1e2d3c-4b5a-6789-0123-456789abcdef"),
+            Id = new Guid("b0d6f5c9-7d1e-4d1b-a4a2-3109a6f5c8d2"),
             Name = "Bose SoundSport",
             Category = ["Accessories"],
             Description = "Wireless headphones with excellent sound quality.",
