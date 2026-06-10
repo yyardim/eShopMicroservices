@@ -11,7 +11,7 @@ body:
   type: json
   content: |-
     {
-      "name": "",
+      "name": "Sample Product",
       "category": ["Electronics", "Gadgets"],
       "description": "A sample product description",
       "imageFile": "product-image.jpg",
