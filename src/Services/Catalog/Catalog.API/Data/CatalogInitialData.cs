@@ -82,7 +82,7 @@ public class CatalogInitialData : IInitialData
         },
         new Product
         {
-            Id = new Guid("abcdef12-3456-7890-abcd-ef1234567890"),
+            Id = new Guid("b7a3d1aa-9bfb-4fd0-a6c2-7c3f353a1c1e"),
             Name = "Nokia 7.1",
             Category = ["Smart Phone"],
             Description = "This phone is the company's biggest change in design.",
