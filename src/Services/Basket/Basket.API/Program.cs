@@ -1,8 +1,9 @@
-using SharedKernel.Exceptions.Handler;
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+
+// **************************************
 // Add services to the container
+// **************************************
 Assembly assembly = typeof(Program).Assembly;
 
 builder.Services.AddCarter(); 
@@ -21,7 +22,7 @@ builder.Services.AddMarten(options =>
 }).UseLightweightSessions();
 
 builder.Services.AddScoped<IBasketRepository, BasketRepository>();
-builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
+//builder.Services.Decorate<IBasketRepository, CachedBasketRepository>();
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
@@ -35,7 +36,12 @@ builder.Services.AddHealthChecks();
 
 WebApplication app = builder.Build();
 
+
+
+
+// **************************************
 // Configure the HTTP request pipeline
+// **************************************
 app.MapCarter();
 
 app.UseExceptionHandler(options => { });

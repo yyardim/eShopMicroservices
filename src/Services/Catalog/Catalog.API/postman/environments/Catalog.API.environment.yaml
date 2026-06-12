@@ -3,6 +3,6 @@ values:
   - key: catalog_url
     value: 'http://localhost:5000'
   - key: basket_url
-    value: ''
+    value: 'http://localhost:5001'
   - key: ordering_url
     value: Electronics

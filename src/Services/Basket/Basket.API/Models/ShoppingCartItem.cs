@@ -7,5 +7,4 @@ public class ShoppingCartItem
     public string Color { get; set; } = default!;
     public decimal Price { get; set; }
     public string ProductName { get; set; } = default!;
-
 }

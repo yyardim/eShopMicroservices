@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=../../postman-schema.json
+$kind: http-request
+name: Health
+method: GET
+url: "{{basket_url}}/health"
+order: 4000
+description: Health check for the Basket API.

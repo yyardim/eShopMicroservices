@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=../../postman-schema.json
+$kind: http-request
+name: Get Basket
+method: GET
+url: '{{basket_url}}/basket/swn'
+order: 1781244300000
+description: Get a basket for a user by their username.

@@ -1,0 +1,4 @@
+# yaml-language-server: $schema=../../../../postman-schema.json
+$kind: collection
+name: Ordering
+order: 2000000000000000

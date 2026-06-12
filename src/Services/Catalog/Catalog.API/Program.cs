@@ -1,7 +1,9 @@
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 
+// **************************************
+// Add services to the container.
+// **************************************
 Assembly assembly = typeof(Program).Assembly;
 
 builder.Services.AddMediatR(config =>
@@ -31,7 +33,12 @@ builder.Services.AddHealthChecks()
 
 WebApplication app = builder.Build();
 
+
+
+
+// **************************************
 // Configure the HTTP request pipeline.
+// **************************************
 app.MapCarter();
 
 app.UseExceptionHandler(options => { });

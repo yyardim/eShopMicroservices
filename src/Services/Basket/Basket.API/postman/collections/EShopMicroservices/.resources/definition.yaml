@@ -1,0 +1,6 @@
+# yaml-language-server: $schema=../../../postman-schema.json
+$kind: collection
+name: EShopMicroservices
+variables:
+  productId: ""
+  username: ""
