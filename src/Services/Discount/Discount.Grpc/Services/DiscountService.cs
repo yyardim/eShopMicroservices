@@ -9,10 +9,13 @@ public class DiscountService
     (DiscountContext dbContext, ILogger<DiscountService> logger)
     : DiscountProtoService.DiscountProtoServiceBase
 {
-    public override Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
+    public override async Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
     {
-        Coupon? coupon = dbContext.Coupons
-            .FirstOrDefault(c => c.ProductName == request.ProductName);
+        IQueryable<Coupon> query = Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.AsNoTracking(dbContext.Coupons);
+        Coupon? coupon = await Microsoft.EntityFrameworkCore.EntityFrameworkQueryableExtensions.FirstOrDefaultAsync(
+            query,
+            c => c.ProductName == request.ProductName,
+            context.CancellationToken);
 
         coupon ??= new Coupon
         {
@@ -24,9 +27,7 @@ public class DiscountService
         if (logger.IsEnabled(LogLevel.Information))
             logger.LogInformation("Discount retrieved for ProductName: {ProductName}, Amount: {Amount}", coupon.ProductName, coupon.Amount);
 
-        CouponModel couponModel = coupon.Adapt<CouponModel>();
-        
-        return Task.FromResult(couponModel);
+        return coupon.Adapt<CouponModel>();
     }
 
     public override async Task<CouponModel> CreateDiscount(CreateDiscountRequest request, ServerCallContext context)
