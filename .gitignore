@@ -235,6 +235,9 @@ ClientBin/
 *~
 *.dbmdl
 *.dbproj.schemaview
+
+# SQLite databases
+discountdb
 *.jfm
 *.pfx
 *.publishsettings

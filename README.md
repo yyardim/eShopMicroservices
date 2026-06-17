@@ -1,16 +1,17 @@
 # eShopMicroservices
 
-A .NET 10 microservices reference application demonstrating CQRS, clean architecture, and containerised deployment with Docker. Built as a learning project covering real-world patterns used in production microservices systems.
+A .NET 10 microservices reference application demonstrating CQRS, clean architecture, gRPC inter-service communication, and containerised deployment with Docker. Built as a learning project covering real-world patterns used in production microservices systems.
 
 ## Architecture Overview
 
 ```
 src/
 ├── Services/
-│   ├── Catalog/Catalog.API      # Product catalogue management
-│   └── Basket/Basket.API        # Shopping basket with Redis caching
-├── BuildingBlocks/BuildingBlocks # Shared cross-cutting library
-└── docker-compose.yml           # Container orchestration
+│   ├── Catalog/Catalog.API        # Product catalogue management (REST)
+│   ├── Basket/Basket.API          # Shopping basket with Redis caching (REST)
+│   └── Discount/Discount.Grpc     # Coupon/discount management (gRPC)
+├── BuildingBlocks/BuildingBlocks  # Shared cross-cutting library
+└── docker-compose.yml             # Container orchestration
 ```
 
 Each service is independently deployable with its own database. Services share nothing at runtime — only the `BuildingBlocks` library is a compile-time dependency.
@@ -56,7 +57,34 @@ Manages shopping baskets. Uses PostgreSQL (Marten) as the primary store and Redi
 | DELETE | `/basket/{userName}` | Delete basket |
 | GET | `/health` | Health check |
 
+**Ports:** HTTP `6001`, HTTPS `6061`
+
 **Cache strategy:** `CachedBasketRepository` decorates `BasketRepository` — reads check Redis first, writes update both stores. Registered transparently via Scrutor's `Decorate<>`.
+
+### Discount.Grpc
+
+Manages product coupons/discounts. Exposes a **gRPC** service (not REST) consumed by other services internally. Uses SQLite via Entity Framework Core — lightweight, no separate database container needed.
+
+| RPC | Description |
+|-----|-------------|
+| `GetDiscount(productName)` | Returns coupon for a product; returns zero-discount coupon if none exists |
+| `CreateDiscount(coupon)` | Creates a new coupon |
+| `UpdateDiscount(coupon)` | Updates an existing coupon |
+| `DeleteDiscount(productName)` | Deletes the coupon for a product |
+
+**Ports:** HTTP `6002`, HTTPS `6062`
+
+**Coupon model:**
+```protobuf
+message CouponModel {
+  int32 id = 1;
+  string productName = 2;
+  string description = 3;
+  double amount = 4;
+}
+```
+
+**Why gRPC?** Discount is an internal service — it is called by Basket.API when checking out, not by external clients. gRPC gives strongly-typed contracts via `.proto` files, efficient binary serialisation, and generated client/server stubs. REST would add unnecessary overhead and loose coupling for an internal call.
 
 ## Key Patterns
 
@@ -103,7 +131,9 @@ All responses include a `traceId`. Validation responses also include the full fi
 | API modules | [Carter](https://github.com/CarterCommunity/Carter) |
 | CQRS / Mediator | [MediatR](https://github.com/jbogard/MediatR) |
 | Document store | [Marten](https://martendb.io/) on PostgreSQL |
+| Relational store | SQLite via [EF Core](https://learn.microsoft.com/en-us/ef/core/) |
 | Distributed cache | Redis via `StackExchange.Redis` |
+| Inter-service RPC | [gRPC](https://grpc.io/) (`Grpc.AspNetCore`) |
 | Validation | [FluentValidation](https://docs.fluentvalidation.net/) |
 | Object mapping | [Mapster](https://github.com/MapsterMapper/Mapster) |
 | DI decorators | [Scrutor](https://github.com/khellang/Scrutor) |
@@ -124,26 +154,35 @@ cd src
 docker compose up --build
 ```
 
-This starts:
-- `catalogdb` — PostgreSQL 17 on port `5432`
-- `catalog.api` — Catalog service on port `6000`
+This starts all containers with explicit names:
 
-The Catalog database is seeded automatically with sample products on first run.
+| Container | Image | Port(s) |
+|-----------|-------|---------|
+| `catalogdb` | postgres:17-alpine | 5432 |
+| `basketdb` | postgres:17-alpine | 5433 |
+| `distributedcache` | redis:8-alpine | 6379 |
+| `catalog.api` | catalogapi | 6000 / 6060 |
+| `basket.api` | basketapi | 6001 / 6061 |
+| `discount.grpc` | discountgrpc | 6002 / 6062 |
+
+The Catalog database is seeded automatically with sample products on first run. The Discount SQLite database is created and migrated on startup.
 
 ### Run locally (without Docker)
 
-1. Start a PostgreSQL instance and update `ConnectionStrings__Database` in `appsettings.Development.json`.
-2. Start a Redis instance for Basket.API.
-3. Run each service:
+1. Start PostgreSQL and update `ConnectionStrings__Database` in `appsettings.Development.json` for Catalog and Basket services.
+2. Start Redis for Basket.API (`docker run -p 6379:6379 redis:8-alpine`).
+3. Discount.Grpc uses SQLite — no external database needed.
+4. Run each service:
 
 ```bash
 dotnet run --project src/Services/Catalog/Catalog.API
 dotnet run --project src/Services/Basket/Basket.API
+dotnet run --project src/Services/Discount/Discount.Grpc
 ```
 
 ### Postman collection
 
-A Postman collection is included at `src/Services/Catalog/Catalog.API/Postman/`. Import the collection and the `Catalog API - Local` environment to get pre-configured requests for all endpoints.
+A Postman collection lives at `postman/` in the repo root, covering all REST endpoints with Local and Docker environments pre-configured.
 
 ## Project Structure — Detailed
 
@@ -158,8 +197,7 @@ src/
 │       ├── BadRequestException.cs
 │       ├── NotFoundException.cs
 │       ├── InternalServerException.cs
-│       └── Handler/
-│           └── CustomExceptionHandler.cs
+│       └── Handler/CustomExceptionHandler.cs
 │
 ├── Services/
 │   ├── Catalog/Catalog.API/
@@ -174,22 +212,31 @@ src/
 │   │   ├── Data/CatalogInitialData.cs
 │   │   └── Exceptions/ProductNotFoundException.cs
 │   │
-│   └── Basket/Basket.API/
-│       ├── Models/              # ShoppingCart, ShoppingCartItem
-│       ├── Basket/              # GetBasket, StoreBasket, DeleteBasket
+│   ├── Basket/Basket.API/
+│   │   ├── Models/              # ShoppingCart, ShoppingCartItem
+│   │   ├── Basket/              # GetBasket, StoreBasket, DeleteBasket
+│   │   ├── Data/
+│   │   │   ├── IBasketRepository.cs
+│   │   │   ├── BasketRepository.cs       # Marten implementation
+│   │   │   └── CachedBasketRepository.cs # Redis decorator
+│   │   └── Exceptions/BasketNotFoundException.cs
+│   │
+│   └── Discount/Discount.Grpc/
+│       ├── Models/Coupon.cs
+│       ├── Protos/discount.proto          # gRPC service contract
+│       ├── Services/DiscountService.cs    # gRPC server implementation
 │       ├── Data/
-│       │   ├── IBasketRepository.cs
-│       │   ├── BasketRepository.cs       # Marten implementation
-│       │   └── CachedBasketRepository.cs # Redis decorator
-│       └── Exceptions/BasketNotFoundException.cs
+│       │   ├── DiscountContext.cs         # EF Core DbContext (SQLite)
+│       │   └── Extensions.cs             # DB migration on startup
+│       └── Migrations/                   # EF Core migrations
 │
 └── docker-compose.yml
-    docker-compose.override.yml  # Dev ports, env vars, volumes
+    docker-compose.override.yml  # Dev ports, env vars, container names, volumes
 ```
 
 ## Roadmap
 
-- Discount service
 - Ordering service
+- gRPC client in Basket.API calling Discount.Grpc at checkout
 - Message bus (RabbitMQ) for async inter-service communication
 - API Gateway
