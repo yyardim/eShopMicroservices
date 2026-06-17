@@ -7,7 +7,7 @@ public class BasketRepository(IDocumentSession session)
     {
         ShoppingCart? basket = await session.LoadAsync<ShoppingCart>(userName, ct);
 
-        return basket is null 
+        return basket is null
             ? throw new BasketNotFoundException(userName) 
             : basket;
     }
