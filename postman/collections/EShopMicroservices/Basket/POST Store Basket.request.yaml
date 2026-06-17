@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=../../postman-schema.json
+$kind: http-request
+name: POST Store Basket
+method: POST
+url: "{{basket_url}}/basket"
+order: 2000
+description: Stores a shopping cart for a user. Returns 201 Created with the username.
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "Cart": {
+        "UserName": "swn",
+        "Items": [
+          {
+            "ProductId": "5334c996-8457-4cf0-815c-ed2b77c4ff61",
+            "Quantity": 2,
+            "Price": 500.00,
+            "Color": "red",
+            "ProductName": "IPhone X"
+          },
+          {
+            "ProductId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+            "Quantity": 1,
+            "Price": 300.00,
+            "Color": "black",
+            "ProductName": "Samsung Galaxy S10"
+          }
+        ]
+      }
+    }

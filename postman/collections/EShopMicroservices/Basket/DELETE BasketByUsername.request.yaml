@@ -1,0 +1,7 @@
+# yaml-language-server: $schema=../../postman-schema.json
+$kind: http-request
+name: DELETE BasketByUsername
+method: DELETE
+url: "{{basket_url}}/basket/{{username}}"
+order: 3000
+description: Deletes the basket for a specific user.

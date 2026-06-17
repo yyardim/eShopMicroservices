@@ -11,12 +11,10 @@ public class CachedBasketRepository
     public async Task<ShoppingCart> GetBasket(string userName, CancellationToken ct = default)
     {
         string? cachedBasket = await cache.GetStringAsync(userName, ct);
-        
         if (!string.IsNullOrEmpty(cachedBasket))
             return JsonSerializer.Deserialize<ShoppingCart>(cachedBasket)!;
 
         ShoppingCart basket = await repository.GetBasket(userName, ct);
-
         await cache.SetStringAsync(userName, JsonSerializer.Serialize(basket), ct);
 
         return basket;

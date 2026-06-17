@@ -1,0 +1,9 @@
+# yaml-language-server: $schema=../postman-schema.json
+name: EShopMicroservices - Docker
+values:
+  - key: catalog_url
+    value: 'http://localhost:6000'
+  - key: basket_url
+    value: 'http://localhost:6001'
+  - key: ordering_url
+    value: ''

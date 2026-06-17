@@ -15,8 +15,7 @@ public class StoreBasketCommandValidator : AbstractValidator<StoreBasketCommand>
 public class StoreBasketCommandHandler(IBasketRepository repository)
     : ICommandHandler<StoreBasketCommand, StoreBasketResult>
 {
-    public async Task<StoreBasketResult> Handle
-        (StoreBasketCommand command, CancellationToken ct)
+    public async Task<StoreBasketResult> Handle(StoreBasketCommand command, CancellationToken ct)
     {
         ShoppingCart cart = command.Cart;
 
