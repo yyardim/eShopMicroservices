@@ -9,7 +9,9 @@ public class DiscountService
     (DiscountContext dbContext, ILogger<DiscountService> logger)
     : DiscountProtoService.DiscountProtoServiceBase
 {
-    public override Task<CouponModel> GetDiscount(GetDiscountRequest request, ServerCallContext context)
+    public override Task<CouponModel> GetDiscount(
+        GetDiscountRequest request,
+        ServerCallContext context)
     {
         Coupon? coupon = dbContext.Coupons
             .FirstOrDefault(c => c.ProductName == request.ProductName);
@@ -22,14 +24,17 @@ public class DiscountService
         };
 
         if (logger.IsEnabled(LogLevel.Information))
-            logger.LogInformation("Discount retrieved for ProductName: {ProductName}, Amount: {Amount}", coupon.ProductName, coupon.Amount);
+            logger.LogInformation("Discount retrieved for ProductName: {ProductName}, Amount: {Amount}",
+                coupon.ProductName, coupon.Amount);
 
         CouponModel couponModel = coupon.Adapt<CouponModel>();
         
         return Task.FromResult(couponModel);
     }
 
-    public override async Task<CouponModel> CreateDiscount(CreateDiscountRequest request, ServerCallContext context)
+    public override async Task<CouponModel> CreateDiscount(
+        CreateDiscountRequest request,
+        ServerCallContext context)
     {
         Coupon coupon = request.Coupon.Adapt<Coupon>()
             ?? throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid coupon data"));
@@ -38,13 +43,16 @@ public class DiscountService
         _ = await dbContext.SaveChangesAsync();
 
         if (logger.IsEnabled(LogLevel.Information))
-            logger.LogInformation("Discount created for ProductName: {ProductName}, Amount: {Amount}", coupon.ProductName, coupon.Amount);
+            logger.LogInformation("Discount created for ProductName: {ProductName}, Amount: {Amount}",
+                coupon.ProductName, coupon.Amount);
 
         CouponModel couponModel = coupon.Adapt<CouponModel>();
         return couponModel;
     }
 
-    public override async Task<CouponModel> UpdateDiscount(UpdateDiscountRequest request, ServerCallContext context)
+    public override async Task<CouponModel> UpdateDiscount(
+        UpdateDiscountRequest request,
+        ServerCallContext context)
     {
         Coupon coupon = request.Coupon.Adapt<Coupon>()
             ?? throw new RpcException(new Status(StatusCode.InvalidArgument, "Invalid coupon data"));
@@ -53,13 +61,16 @@ public class DiscountService
         _ = await dbContext.SaveChangesAsync();
 
         if (logger.IsEnabled(LogLevel.Information))
-            logger.LogInformation("Discount updated for ProductName: {ProductName}, Amount: {Amount}", coupon.ProductName, coupon.Amount);
+            logger.LogInformation("Discount updated for ProductName: {ProductName}, Amount: {Amount}",
+                coupon.ProductName, coupon.Amount);
 
         CouponModel couponModel = coupon.Adapt<CouponModel>();
         return couponModel;
     }
 
-    public override async Task<DeleteDiscountResponse> DeleteDiscount(DeleteDiscountRequest request, ServerCallContext context)
+    public override async Task<DeleteDiscountResponse> DeleteDiscount(
+        DeleteDiscountRequest request,
+        ServerCallContext context)
     {
         Coupon? coupon = dbContext.Coupons
             .FirstOrDefault(c => c.ProductName == request.ProductName) 
@@ -69,7 +80,8 @@ public class DiscountService
         await dbContext.SaveChangesAsync();
 
         if (logger.IsEnabled(LogLevel.Information))
-            logger.LogInformation("Discount deleted for ProductName: {ProductName}, Amount: {Amount}", coupon.ProductName, coupon.Amount);
+            logger.LogInformation("Discount deleted for ProductName: {ProductName}, Amount: {Amount}",
+                coupon.ProductName, coupon.Amount);
 
         return new DeleteDiscountResponse { Success = true };
     }
