@@ -30,6 +30,7 @@ public record Payment
         ArgumentException.ThrowIfNullOrWhiteSpace(cardNumber, nameof(cardNumber));
         ArgumentException.ThrowIfNullOrWhiteSpace(cardHolderName, nameof(cardHolderName));
         ArgumentException.ThrowIfNullOrWhiteSpace(expiration, nameof(expiration));
+        ArgumentException.ThrowIfNullOrWhiteSpace(cvv, nameof(cvv));
         ArgumentOutOfRangeException.ThrowIfGreaterThan(cvv.Length, 3, nameof(cvv));
 
         return new Payment
