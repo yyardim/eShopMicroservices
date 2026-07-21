@@ -2,24 +2,24 @@ namespace Ordering.Domain.ValueObjects;
 
 public record Payment
 {
-    public string? CardName { get; } = default!;
+    public string CardName { get; } = default!;
     public string CardNumber { get; } = default!;
     public string CardHolderName { get; } = default!;
-    public string Expiration { get; } = default!;
-    public string CVV { get; } = default!;
+    public string ExpirationDate { get; } = default!;
+    public string Cvv { get; } = default!;
     public int PaymentMethod { get; } = default!;
 
     protected Payment() { }
 
     private Payment(
         string cardName, string cardNumber, string cardHolderName,
-        string expiration, string cvv, int paymentMethod)
+        string expirationDate, string cvv, int paymentMethod)
     {
         CardName = cardName;
         CardNumber = cardNumber;
         CardHolderName = cardHolderName;
-        Expiration = expiration;
-        CVV = cvv;
+        ExpirationDate = expirationDate;
+        Cvv = cvv;
         PaymentMethod = paymentMethod;
     }
 

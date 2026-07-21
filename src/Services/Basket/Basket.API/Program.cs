@@ -11,11 +11,11 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 Assembly assembly = typeof(Program).Assembly;
 
 #region Application services
-builder.Services.AddCarter(); 
+builder.Services.AddCarter();
 builder.Services.AddMediatR(config =>
 {
     config.RegisterServicesFromAssembly(assembly);
-    config.AddOpenBehavior(typeof(ValidatorBehavior<,>));
+    config.AddOpenBehavior(typeof(ValidationBehavior<,>));
     config.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 builder.Services.AddValidatorsFromAssembly(assembly);
