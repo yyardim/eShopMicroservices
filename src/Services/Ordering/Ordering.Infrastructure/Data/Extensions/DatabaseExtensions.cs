@@ -40,7 +40,7 @@ public static class DatabaseExtensions
         }
     }
 
-    private static async Task SeedOrderandItemsAsync(ApplicationDbContext dbContext)
+    private static async Task SeedOrderAndItemsAsync(ApplicationDbContext dbContext)
     {
         if (!await dbContext.Orders.AnyAsync())
         {
