@@ -29,8 +29,7 @@ public class AuditableEntityInterceptor : SaveChangesInterceptor
                 entry.Entity.CreatedAt = DateTime.UtcNow;
                 entry.Entity.CreatedBy = "System";
             }
-            else if (entry.State is EntityState.Added ||
-                entry.State is EntityState.Modified ||
+            else if ( entry.State is EntityState.Modified ||
                 entry.HasChangedOwnEntities())
             {
                 entry.Entity.LastModified = DateTime.UtcNow;

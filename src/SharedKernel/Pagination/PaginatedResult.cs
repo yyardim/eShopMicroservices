@@ -1,5 +1,3 @@
-using Marten.Linq.Parsing;
-
 namespace SharedKernel.Pagination;
 
 public class PaginatedResult<TEntity>(

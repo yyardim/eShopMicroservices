@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using SharedKernel.Behaviors;
+using FluentValidation;
 
 namespace Ordering.Application;
 
@@ -15,6 +16,8 @@ public static class DependencyInjection
                 _ = cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
                 _ = cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             });
+
+        _ = services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
         return services;
     }

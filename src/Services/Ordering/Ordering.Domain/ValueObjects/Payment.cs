@@ -25,15 +25,15 @@ public record Payment
 
     public static Payment Of(
         string cardName, string cardNumber, string cardHolderName,
-        string expiration, string cvv, int paymentMethod)
+        string expirationDate, string cvv, int paymentMethod)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(cardNumber, nameof(cardNumber));
         ArgumentException.ThrowIfNullOrWhiteSpace(cardHolderName, nameof(cardHolderName));
-        ArgumentException.ThrowIfNullOrWhiteSpace(expiration, nameof(expiration));
+        ArgumentException.ThrowIfNullOrWhiteSpace(expirationDate, nameof(expirationDate));
         ArgumentException.ThrowIfNullOrWhiteSpace(cvv, nameof(cvv));
         ArgumentOutOfRangeException.ThrowIfGreaterThan(cvv.Length, 3, nameof(cvv));
 
         return new Payment
-            (cardName, cardNumber, cardHolderName, expiration, cvv, paymentMethod);
+            (cardName, cardNumber, cardHolderName, expirationDate, cvv, paymentMethod);
     }
 }

@@ -10,7 +10,8 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructureServices
         (this IServiceCollection services, IConfiguration configuration)
     {
-        string? connectionString = configuration.GetConnectionString("Database");
+        string? connectionString = configuration.GetConnectionString("Database")
+            ?? throw new InvalidOperationException("Connection string 'Database' was not found.");
 
         // Add services to the container.
         _ = services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
