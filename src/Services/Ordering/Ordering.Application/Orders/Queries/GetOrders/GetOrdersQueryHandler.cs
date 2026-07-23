@@ -19,8 +19,8 @@ public class GetOrdersQueryHandler(IApplicationDbContext dbContext)
         List<Order> orders = await dbContext.Orders
             .Include(o => o.OrderItems)
             .AsNoTracking()
-            .OrderBy(o => o.OrderName)
-            .Skip((pageIndex - 1) * pageSize)
+            .OrderBy(o => o.OrderName.Value)
+            .Skip(pageIndex * pageSize)
             .Take(pageSize)
             .ToListAsync(ct);
 
