@@ -23,8 +23,8 @@ internal class InitialData
             Address address1 = Address.Of("John", "Doe", "john.doe@example.com", "123 Main St", "Marina Del Rey", "CA", "12345", "USA");
             Address address2 = Address.Of("Jane", "Smith", "jane.smith@example.com", "456 Elm St", "Los Angeles", "CA", "67890", "USA");
 
-            Payment payment1 = Payment.Of("John's Card", "4111111111111111","John Doe", "12/25", "123", 1);
-            Payment payment2 = Payment.Of("Jane's Card", "4222222222222222", "Jane Smith", "11/24", "456", 2);
+            Payment payment1 = Payment.Of("4111111111111111","John Doe", "12/25", "123", 1);
+            Payment payment2 = Payment.Of("4222222222222222", "Jane Smith", "11/24", "456", 2);
 
             Order order1 = Order.Create(
                 OrderId.Of(Guid.NewGuid()),

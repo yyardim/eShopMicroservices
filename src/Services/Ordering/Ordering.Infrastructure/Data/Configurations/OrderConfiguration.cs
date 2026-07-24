@@ -96,10 +96,11 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         _ = builder.ComplexProperty(
             o => o.Payment, static paymentBuilder =>
             {
-                _ = paymentBuilder.Property(static p => p.CardName)
-                    .HasMaxLength(50);
                 _ = paymentBuilder.Property(static p => p.CardNumber)
                     .HasMaxLength(20)
+                    .IsRequired();
+                _ = paymentBuilder.Property(static p => p.CardHolderName)
+                    .HasMaxLength(50)
                     .IsRequired();
                 _ = paymentBuilder.Property(static p => p.ExpirationDate)
                     .HasMaxLength(10)

@@ -6,4 +6,4 @@ values:
   - key: basket_url
     value: 'http://localhost:5051'
   - key: ordering_url
-    value: ''
+    value: 'https://localhost:5053'

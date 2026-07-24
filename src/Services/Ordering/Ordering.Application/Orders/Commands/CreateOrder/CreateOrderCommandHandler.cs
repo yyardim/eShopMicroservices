@@ -9,7 +9,9 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 {
     public CreateOrderCommandValidator()
     {
-        RuleFor(x => x.Order.OrderName).NotEmpty().WithMessage("Name is required.");
+        RuleFor(x => x.Order.OrderName)
+            .NotEmpty().WithMessage("Name is required.")
+            .Length(5).WithMessage("Name must be exactly 5 characters.");
         RuleFor(x => x.Order.CustomerId).NotEmpty().WithMessage("CustomerId is required");
         RuleFor(x => x.Order.OrderItems).NotEmpty().WithMessage("Order Items should not be empty");
     }
@@ -51,14 +53,13 @@ public class CreateOrderCommandHandler(IApplicationDbContext dbContext)
             orderDto.BillingAddress.ZipCode,
             orderDto.BillingAddress.Country);
 
-        Order newOrder = Domain.Models.Order.Create(
+        Order newOrder = Order.Create(
             id: OrderId.Of(Guid.NewGuid()),
             customerId: CustomerId.Of(orderDto.CustomerId),
             orderName: OrderName.Of(orderDto.OrderName),
             shippingAddress: shippingAddress,
             billingAddress: billingAddress,
             payment: Payment.Of(
-                orderDto.Payment.CardName,
                 orderDto.Payment.CardNumber,
                 orderDto.Payment.CardHolderName,
                 orderDto.Payment.ExpirationDate,

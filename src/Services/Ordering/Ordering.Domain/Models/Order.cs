@@ -13,7 +13,7 @@ public class Order : Aggregate<OrderId>
     public OrderStatus Status { get; private set; } = OrderStatus.Pending;
     public decimal TotalPrice
     {
-        get => OrderItems.Sum(x => x.Price * x.Quantity);
+        get => OrderItems.Sum(static x => x.Price * x.Quantity);
         private set { }
     }
 

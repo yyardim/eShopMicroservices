@@ -29,7 +29,6 @@ public static class OrderExtensions
                 Country: order.BillingAddress.Country
             ),
             new PaymentDto(
-                CardName: order.Payment.CardName,
                 CardNumber: order.Payment.CardNumber,
                 CardHolderName: order.Payment.CardHolderName,
                 ExpirationDate: order.Payment.ExpirationDate,
