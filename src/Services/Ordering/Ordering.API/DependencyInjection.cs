@@ -14,8 +14,10 @@ public static class DependencyInjection
 
         _ = services.AddExceptionHandler<CustomExceptionHandler>();
 
-        _ = services.AddHealthChecks()
-            .AddSqlServer(configuration.GetConnectionString("Database")!);
+        string connectionString = configuration.GetConnectionString("Database")
+             ?? throw new InvalidOperationException("Database connection string is not configured.");
+
+        _ = services.AddHealthChecks().AddSqlServer(connectionString);
 
         return services;
     }

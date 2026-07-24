@@ -4,7 +4,7 @@ namespace Ordering.API.Endpoints;
 
 public record GetOrdersByNameResponse(IEnumerable<OrderDto> Orders);
 
-public class GetOrderByName : ICarterModule
+public class GetOrdersByName : ICarterModule
 {
     private const string Route = "/orders";
 
@@ -18,7 +18,7 @@ public class GetOrderByName : ICarterModule
 
             return Results.Ok(response);
         })
-            .WithName("GetOrderByName")
+            .WithName("GetOrdersByName")
             .Produces<GetOrdersByNameResponse>(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
