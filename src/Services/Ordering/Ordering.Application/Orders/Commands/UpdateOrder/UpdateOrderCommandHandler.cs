@@ -10,9 +10,9 @@ public class UpdateOrderCommandValidator : AbstractValidator<UpdateOrderCommand>
     public UpdateOrderCommandValidator()
     {
         RuleFor(x => x.Order.Id).NotEmpty().WithMessage("Id is required.");
-        RuleFor(x => x.Order.OrderName)
+        _ = RuleFor(x => x.Order.OrderName)
             .NotEmpty().WithMessage("Name is required.")
-            .Length(5).WithMessage("Name must be exactly 5 characters.");
+            .MinimumLength(2).WithMessage("Name must be at least 2 characters.");
         RuleFor(x => x.Order.CustomerId).NotEmpty().WithMessage("CustomerId is required");
     }
 }
@@ -22,7 +22,7 @@ public class UpdateOrderCommandHandler(IApplicationDbContext dbContext)
 {
     public async Task<UpdateOrderResult> Handle(UpdateOrderCommand command, CancellationToken ct)
     {
-        OrderId orderId = OrderId.Of(command.Order.Id);
+        OrderId orderId = OrderId.From(command.Order.Id);
         Order? order = await dbContext.Orders
             .FindAsync(orderId, ct)
             ?? throw new OrderNotFoundException(command.Order.Id);
@@ -37,7 +37,7 @@ public class UpdateOrderCommandHandler(IApplicationDbContext dbContext)
 
     private static void UpdateOrderWithNewValues(Order order, OrderDto orderDto)
     {
-        Address updatedShippingAddress = Address.Of(
+        Address updatedShippingAddress = Address.Create(
             orderDto.ShippingAddress.FirstName,
             orderDto.ShippingAddress.LastName,
             orderDto.ShippingAddress.Email,
@@ -47,7 +47,7 @@ public class UpdateOrderCommandHandler(IApplicationDbContext dbContext)
             orderDto.ShippingAddress.ZipCode,
             orderDto.ShippingAddress.Country);
 
-        Address updatedBillingAddress = Address.Of(
+        Address updatedBillingAddress = Address.Create(
             orderDto.BillingAddress.FirstName,
             orderDto.BillingAddress.LastName,
             orderDto.BillingAddress.Email,
@@ -57,7 +57,7 @@ public class UpdateOrderCommandHandler(IApplicationDbContext dbContext)
             orderDto.BillingAddress.ZipCode,
             orderDto.BillingAddress.Country);
 
-        Payment updatedPayment = Payment.Of(
+        Payment updatedPayment = Payment.Create(
             orderDto.Payment.CardNumber,
             orderDto.Payment.CardHolderName,
             orderDto.Payment.ExpirationDate,
@@ -65,7 +65,7 @@ public class UpdateOrderCommandHandler(IApplicationDbContext dbContext)
             orderDto.Payment.PaymentMethod);
 
         order.Update(
-            orderName: OrderName.Of(orderDto.OrderName),
+            orderName: OrderName.Parse(orderDto.OrderName),
             shippingAddress: updatedShippingAddress,
             billingAddress: updatedBillingAddress,
             payment: updatedPayment,

@@ -8,7 +8,7 @@ public class OrderItem : Entity<OrderItemId>
         int quantity,
         decimal price)
     {
-        Id = OrderItemId.Of(Guid.NewGuid());
+        Id = OrderItemId.From(Guid.NewGuid());
         OrderId = orderId;
         ProductId = productId;
         Quantity = quantity;

@@ -19,7 +19,7 @@ public class DeleteOrderCommandHandler(IApplicationDbContext dbContext)
 {
     public async Task<DeleteOrderResult> Handle(DeleteOrderCommand command, CancellationToken ct)
     {
-        OrderId orderId = OrderId.Of(command.OrderId);
+        OrderId orderId = OrderId.From(command.OrderId);
         Order? order = await dbContext.Orders
             .FindAsync([orderId], cancellationToken: ct)
             ?? throw new OrderNotFoundException(command.OrderId);

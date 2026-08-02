@@ -12,7 +12,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         _ = builder.Property(static c => c.Id)
             .HasConversion(
                 static customerId => customerId.Value,
-                static dbId => CustomerId.Of(dbId));
+                static dbId => CustomerId.From(dbId));
 
         _ = builder.Property(static c => c.Name).HasMaxLength(100).IsRequired();
 

@@ -13,7 +13,8 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Services/Basket/Basket.API/Basket.API.csproj", "Services/Basket/Basket.API/"]
-COPY ["SharedKernel/SharedKernel.csproj", "SharedKernel/"]
+COPY ["SharedKernel/SharedKernel.Messaging/SharedKernel.Messaging.csproj", "SharedKernel/SharedKernel.Messaging/"]
+COPY ["SharedKernel/SharedKernel/SharedKernel.csproj", "SharedKernel/SharedKernel/"]
 RUN dotnet restore "./Services/Basket/Basket.API/Basket.API.csproj"
 COPY . .
 WORKDIR "/src/Services/Basket/Basket.API"
