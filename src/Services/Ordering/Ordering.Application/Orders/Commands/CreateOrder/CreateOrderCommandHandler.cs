@@ -9,9 +9,9 @@ public class CreateOrderCommandValidator : AbstractValidator<CreateOrderCommand>
 {
     public CreateOrderCommandValidator()
     {
-        RuleFor(x => x.Order.OrderName)
+        _ = RuleFor(x => x.Order.OrderName)
             .NotEmpty().WithMessage("Name is required.")
-            .Length(5).WithMessage("Name must be exactly 5 characters.");
+            .MinimumLength(2).WithMessage("Name must be at least 2 characters.");
         RuleFor(x => x.Order.CustomerId).NotEmpty().WithMessage("CustomerId is required");
         RuleFor(x => x.Order.OrderItems).NotEmpty().WithMessage("Order Items should not be empty");
     }
@@ -33,7 +33,7 @@ public class CreateOrderCommandHandler(IApplicationDbContext dbContext)
 
     private static Order CreateNewOrder(OrderDto orderDto)
     {
-        Address shippingAddress = Address.Of(
+        Address shippingAddress = Address.Create(
             orderDto.ShippingAddress.FirstName,
             orderDto.ShippingAddress.LastName,
             orderDto.ShippingAddress.Email,
@@ -43,7 +43,7 @@ public class CreateOrderCommandHandler(IApplicationDbContext dbContext)
             orderDto.ShippingAddress.ZipCode,
             orderDto.ShippingAddress.Country);
 
-        Address billingAddress = Address.Of(
+        Address billingAddress = Address.Create(
             orderDto.BillingAddress.FirstName,
             orderDto.BillingAddress.LastName,
             orderDto.BillingAddress.Email,
@@ -54,12 +54,12 @@ public class CreateOrderCommandHandler(IApplicationDbContext dbContext)
             orderDto.BillingAddress.Country);
 
         Order newOrder = Order.Create(
-            id: OrderId.Of(Guid.NewGuid()),
-            customerId: CustomerId.Of(orderDto.CustomerId),
-            orderName: OrderName.Of(orderDto.OrderName),
+            id: OrderId.From(Guid.NewGuid()),
+            customerId: CustomerId.From(orderDto.CustomerId),
+            orderName: OrderName.Parse(orderDto.OrderName),
             shippingAddress: shippingAddress,
             billingAddress: billingAddress,
-            payment: Payment.Of(
+            payment: Payment.Create(
                 orderDto.Payment.CardNumber,
                 orderDto.Payment.CardHolderName,
                 orderDto.Payment.ExpirationDate,
@@ -68,7 +68,7 @@ public class CreateOrderCommandHandler(IApplicationDbContext dbContext)
 
         foreach (var orderItemDto in orderDto.OrderItems)
             newOrder.Add(
-                ProductId.Of(orderItemDto.ProductId),
+                ProductId.From(orderItemDto.ProductId),
                 orderItemDto.Quantity,
                 orderItemDto.Price);
 

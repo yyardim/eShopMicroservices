@@ -1,6 +1,7 @@
 using Discount.Grpc;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using SharedKernel.Messaging.MassTransit;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +55,12 @@ builder.Services.AddGrpcClient<DiscountProtoService.DiscountProtoServiceClient>(
                 .DangerousAcceptAnyServerCertificateValidator
         };
     });
+#endregion
+
+#region Async messaging services
+
+builder.Services.AddMessageBroker(builder.Configuration);
+
 #endregion
 
 #region Cross-cutting services

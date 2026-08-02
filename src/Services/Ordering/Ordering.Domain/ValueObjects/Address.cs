@@ -26,8 +26,7 @@ public record Address
         Country = country;
     }
 
-    public static Address Of(string firstName, string lastName, string email,
-        string addressLine, string city, string state, string zipCode, string country)
+    public static Address Create(string firstName, string lastName, string email, string addressLine, string city, string state, string zipCode, string country)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(email, nameof(email));
         ArgumentException.ThrowIfNullOrWhiteSpace(addressLine, nameof(addressLine));

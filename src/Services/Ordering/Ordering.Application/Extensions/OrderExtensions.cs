@@ -4,7 +4,12 @@ public static class OrderExtensions
 {
     public static IEnumerable<OrderDto> ToOrderDtoList(this IEnumerable<Order> orders)
     {
-        return orders.Select(static order => new OrderDto(
+        return orders.Select(static order => order.ToOrderDto());
+    }
+
+    public static OrderDto ToOrderDto(this Order order)
+    {
+        return new OrderDto(
             Id: order.Id.Value,
             CustomerId: order.CustomerId.Value,
             OrderName: order.OrderName.Value,
@@ -18,7 +23,7 @@ public static class OrderExtensions
                 ZipCode: order.ShippingAddress.ZipCode,
                 Country: order.ShippingAddress.Country
             ),
-            new AddressDto(
+            BillingAddress: new AddressDto(
                 FirstName: order.BillingAddress.FirstName,
                 LastName: order.BillingAddress.LastName,
                 Email: order.BillingAddress.Email,
@@ -28,7 +33,7 @@ public static class OrderExtensions
                 ZipCode: order.BillingAddress.ZipCode,
                 Country: order.BillingAddress.Country
             ),
-            new PaymentDto(
+            Payment: new PaymentDto(
                 CardNumber: order.Payment.CardNumber,
                 CardHolderName: order.Payment.CardHolderName,
                 ExpirationDate: order.Payment.ExpirationDate,
@@ -41,6 +46,6 @@ public static class OrderExtensions
                 ProductId: oi.ProductId.Value,
                 Quantity: oi.Quantity,
                 Price: oi.Price))]
-        ));
+        );
     }
 }

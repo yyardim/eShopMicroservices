@@ -12,7 +12,7 @@ public class OrderItemConfiguration : IEntityTypeConfiguration<OrderItem>
         _ = builder.Property(static oi => oi.Id)
             .HasConversion(
                 static orderItemId => orderItemId.Value,
-                static dbId => OrderItemId.Of(dbId));
+                static dbId => OrderItemId.From(dbId));
 
         _ = builder.HasOne<Product>()
             .WithMany()
